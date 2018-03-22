@@ -74,14 +74,14 @@
                         <i class="fas fa-user"></i>
                       </span>
                     </div>
-                    <input type="text" class="form-control" placeholder="Customer Name">
+                    <input type="text" class="form-control" id="customerName" placeholder="Customer Name">
                   </div>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
                   <div class="input-group input-group-transparent mb-4">
-                    <input type="text" class="form-control" placeholder="Invoice No.">
+                    <input type="text" class="form-control" id="invoiceNumber" placeholder="Invoice No.">
                     <div class="input-group-append">
                       <span class="input-group-text">
                         <i class="fas fa-paper-plane"></i>
@@ -101,14 +101,14 @@
                         <i class="fas fa-calendar-alt"></i>
                       </span>
                     </div>
-                    <input type="text" class="form-control" placeholder="Invoice Date">
+                    <input type="text" class="form-control" id="invoiceDate" placeholder="Invoice Date">
                   </div>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
                   <div class="input-group input-group-transparent mb-4">
-                    <input type="text" class="form-control" placeholder="Due Date">
+                    <input type="text" class="form-control" id="dueDate" placeholder="Due Date">
                     <div class="input-group-append">
                       <span class="input-group-text">
                         <i class="fas fa-stopwatch"></i>
@@ -178,7 +178,7 @@
 
             <div class="row">
               <div class="col-md-4">
-                <button type="button" class="btn btn-block btn-success btn-animated btn-animated-y">
+                <button type="button" onclick="submitData()" class="btn btn-block btn-success btn-animated btn-animated-y">
                   <span class="btn-inner--visible">Submit</span>
                   <span class="btn-inner--hidden">
                     <i class="fas fa-save"></i>
@@ -347,20 +347,42 @@
 <!-- Data and function to generate and place template starts -->
 <script>
   var itemsObj = {};
-  
+  itemsObj.itemsData = [];
+
   function addItemCard() {
     var data = {};
 
-    data.itemShortName = ($("#itemDetails").val()).substring(0, 2);
+    data.itemShortName = ($("#itemDetails").val()).substring(0, 2).toUpperCase();
     data.ItemName = $("#itemDetails").val();
     data.qty = $("#quantity").val();
     data.rate = $("#rate").val();
     data.amount = $("#amount").val();
 
+    if (!itemsObj.customerName) {
+      itemsObj.customerName = $("#customerName").val();
+    }
+
+    if (!itemsObj.invoiceNumber) {
+      itemsObj.invoiceNumber = $("#invoiceNumber").val();
+    }
+    if (!itemsObj.invoiceDate) {
+      itemsObj.invoiceDate = $("#invoiceDate").val();
+    }
+    if (!itemsObj.dueDate) {
+      itemsObj.dueDate = $("#dueDate").val();
+    }
+
+    itemsObj.itemsData.push(data);
+
     var template = $("#tutorial-template").html();
     var html = Mustache.render(template, data);
     $("#cardsList").append(html);
+    
+  }
 
+  function submitData(){
+    console.log('submit Clicked');
+    console.log(JSON.stringify(itemsObj));
   }
 
   $(document).ready(function () {
