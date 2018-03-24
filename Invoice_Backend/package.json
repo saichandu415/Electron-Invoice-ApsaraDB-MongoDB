@@ -1,0 +1,8 @@
+{
+  "name": "get-post-demo",
+  "version": "0.0.2",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2"
+  }
+}

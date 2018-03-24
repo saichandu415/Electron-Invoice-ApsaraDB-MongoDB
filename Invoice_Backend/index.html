@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Simple login</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script>
+    function login() {
+      const username = $("#ipUsername").val();
+      const password = $("#ipPassword").val();
+
+      $.post("http://localhost:3000/login", { username: username, password: password }, (data, status) => {
+
+        if (status === 'success')
+          alert(`Login success\n${data}`);
+        else
+          alert("Login denied");
+
+      });
+    }
+  </script>
+</head>
+
+<body>
+  <h1>Sign in</h1>
+  <form onsubmit="login()">
+    <label for="ipUsername">Username:</label>
+    <input id="ipUsername" size="40" autocomplete="off">
+    <br>
+    <label for="ipPassword">Password:</label>
+    <input id="ipPassword" size="40" type="password">
+    <br>
+    <br>
+    <button type="submit">Login</button>
+  </form>
+
+</body>
+
+</html>
