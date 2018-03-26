@@ -6,7 +6,7 @@ printPDFButton.addEventListener('click',function( event){
     ipc.send('print-to-pdf');
 });
 
-ipc.in('wrote-pdf',function(event,path){
+ipc.on('wrote-pdf',function(event,path){
     const message = `Wrote PDF to : ${path}`;
     
 })
