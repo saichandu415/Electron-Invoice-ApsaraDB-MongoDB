@@ -62,7 +62,7 @@
         </ul>
         <div class="tab-content" id="myTabContent">
           <div class="tab-pane fade show active" id="newInvoice" role="tabpanel" aria-labelledby="home-tab">
-            <p>New Invoice Content</p>
+
 
 
             <div class="row">
@@ -194,7 +194,7 @@
                 </button>
               </div>
               <div class="col-md-4">
-                <button type="button" class="btn btn-block btn-primary btn-animated btn-animated-y">
+                <button type="button" id="print-pdf" class="btn btn-block btn-primary btn-animated btn-animated-y">
                   <span class="btn-inner--visible">Print</span>
                   <span class="btn-inner--hidden">
                     <i class="fas fa-print"></i>
@@ -204,9 +204,34 @@
             </div>
 
 
+            <div class="modal modal-success fade" id="modal_5" tabindex="-1" role="dialog" aria-labelledby="modal_5" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="modal_title_6">Invoice Status</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="resetForm()">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="py-3 text-center">
+                      <i class="fas fa-hdd fa-4x"></i>
+                      <h4 class="heading mt-4">Your data is saved</h4>
+                      <p>
+                        The Invoice you created is saved and the data is included in the dashboard analysis
+                      </p>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal" onclick="resetForm()">Create Invoice</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
           <div class="tab-pane fade" id="dashboard" role="tabpanel" aria-labelledby="profile-tab">
-            <p>DashBoard content</p>
+
 
             <div class="row">
               <div class="col-lg-6">
@@ -276,7 +301,7 @@
               </div>
             </div>
             <h3 class="centerme" style="margin-top:10px;margin-bottom:10px;">Total Sales Visualization</h3>
-            <div class="chart-container" style="position: relative; height:40vh; width:80vw">
+            <div class="chart-container" style="position: relative; height:80vh; width:80vw">
               <canvas id="myChart"></canvas>
             </div>
 
@@ -382,7 +407,7 @@
 
   function submitData() {
     console.log('submit Clicked');
-    console.log(JSON.stringify(itemsObj));
+
 
     var itemsArr = itemsObj.itemsData;
 
@@ -394,6 +419,26 @@
       totalAmount = totalAmount + parseFloat(itemsArr[i].amount);
     }
     console.log(totalAmount);
+    itemsObj.totalAmount = totalAmount;
+    console.log(JSON.stringify(itemsObj));
+
+    //  $.post("http://149.129.130.26:443/data/invoice",
+    //  itemsObj,
+    //     function(data, status){
+    //                       console.log("Data: " + data + "\nStatus: " + status);
+    //     });
+    $.ajax({
+      type: 'POST',
+      data: JSON.stringify(itemsObj),
+      contentType: 'application/json',
+      url: 'http://149.129.130.26:443/data/invoice',
+      success: function (data) {
+        console.log('success');
+        console.log(JSON.stringify(data));
+        $("#modal_5").modal("show");
+      }
+    });
+
 
   }
 
@@ -403,6 +448,7 @@
         $("#amount").val(parseFloat($("#quantity").val()) * parseFloat($("#rate").val()));
       }
     });
+
   });
 </script>
 <!-- Data and function to generate and place template starts -->
@@ -410,28 +456,28 @@
 <script>
   // Chart data variable
   var dataVariable = {
-      type: 'line',
-      data: {
-        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-        datasets: [{
-          label: 'Sale Revenue',
-          data: [12, 19, 3, 5, 2, 3],
-          backgroundColor: 'rgb(255, 99, 132)',
-          borderColor: 'rgb(255, 99, 132)',
-          borderWidth: 1,
-          fill: true
+    type: 'line',
+    data: {
+      labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+      datasets: [{
+        label: 'Sale Revenue',
+        data: [12, 19, 3, 5, 2, 3],
+        backgroundColor: 'rgb(255, 99, 132)',
+        borderColor: 'rgb(255, 99, 132)',
+        borderWidth: 1,
+        fill: true
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
         }]
-      },
-      options: {
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }]
-        }
       }
-    };
+    }
+  };
   // Chart Function
   function loadLineChart() {
     var ctx = document.getElementById("myChart").getContext('2d');
@@ -448,20 +494,40 @@
   }
 
   function getCurrentDate() {
-    
+
     var d = new Date();
     var month = d.getMonth() + 1;
     var day = d.getDate();
-    
+
     var output = d.getFullYear() + '/' + (month < 10 ? '0' : '') + month + '/' + (day < 10 ? '0' : '') + day;
     $('#invoiceDate').val(output);
   }
 
-  function fetchAndLoadValues(){
+  function fetchAndLoadValues() {
+    var ajaxResult = {};
+    $.ajax({
+      url: "http://149.129.130.26:443/data/dashboard", success: function (result) {
+        console.log(result);
+        ajaxResult = result;
+        dataVariable.data.labels = ajaxResult.datesArr;
+        dataVariable.data.datasets[0].data = ajaxResult.salesArr;
+        $('#saleValueUpdateTime').text(timeNow());
+        $('#saleCountUpdateValue').text(timeNow());
+        $('#saleValue').text("sale Value : $ " + (ajaxResult.salesArr)[0]);
+        $('#saleCount').text("Count : " + (ajaxResult.ordersArr)[0]);
+        loadLineChart();
+      }
+    });
 
-    
 
-  loadLineChart();
+
+
+  }
+  function timeNow(i) {
+    var d = new Date(),
+      h = (d.getHours() < 10 ? '0' : '') + d.getHours(),
+      m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+    return (h + ':' + m);
   }
 </script>
 <!-- Chart related functions -->
