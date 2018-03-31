@@ -3,6 +3,10 @@
   "version": "0.0.2",
   "dependencies": {
     "body-parser": "^1.18.2",
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "formidable": "^1.1.1",
+    "mongodb": "^2.2.33",
+    "node-uuid": "^1.4.8",
+    "sprintf-js": "^1.1.1"
   }
 }
