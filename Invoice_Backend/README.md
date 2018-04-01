@@ -1,4 +1,4 @@
-# POST Request in Expressjs 4
+# Invoicing Backend using Node Server
 
 Download code and run
 
@@ -6,9 +6,7 @@ Download code and run
 npm install
 ```
 ```
-node server.js
+node server.js (or) npm start
 ```
 
-Visit ```http://localhost:3000``` to view the app.
-
-Watch the demo [here](https://www.youtube.com/watch?v=C3G3N4LMJeE)
+Visit ```http://localhost:443/data/dashboard``` to see the output of the API
