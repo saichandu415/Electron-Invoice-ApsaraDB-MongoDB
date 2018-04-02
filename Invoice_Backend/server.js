@@ -49,8 +49,6 @@ app.post('/data/invoice', (req, res) => {
 
 function getDashboardData() {
 
-  // var coll2Fetch = collection;
-
   return new Promise(function (resolve, reject) {
     // Logic to fetch from the MongoDB
     mongoClient.connect(url, function (err, db) {
@@ -77,14 +75,11 @@ function getDashboardData() {
                 console.error('Unable to find data' + JSON.stringify(err));
               } else {
                 console.info('data Fetched from MongoDB');
-                var response = {};
-                
+                var response = {}; 
 
                 var datesArr = [];
                 var salesArr = [];
                 var ordersArr = [];
-
-
 
                 var i =0;
                 for(i=0; i<5; i++){
@@ -121,8 +116,6 @@ function getDashboardData() {
 }
 
 function saveInvoiceData(collectionData) {
-
-  // var coll2Fetch = collection;
 
   console.log(collectionData);
   return new Promise(function (resolve, reject) {
@@ -161,6 +154,6 @@ function saveInvoiceData(collectionData) {
 }
 
 http.createServer(app).listen(443, function () {
-  console.log('Server for "Advanced Interactivity in AMP" codelab listening on port 443!');
+  console.log('Server for Invoice Backend running on port 443!');
 });
 
